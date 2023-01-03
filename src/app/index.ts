@@ -161,7 +161,7 @@ const btnPhone = document.querySelector('.nav__link.phone');
 const btnAll = document.querySelector('.nav__link.all');
 const btnWatch = document.querySelector('.nav__link.watch');
 const btnAir = document.querySelector('.nav__link.air');
-
+const btnMac = document.querySelector('.nav__link.mac');
 
 let afterOrder = false;
 
@@ -765,6 +765,7 @@ setTimeout(func, 1000);
 (btnPhone as Element).addEventListener("click", () => showCategory('phone', true));
 (btnWatch as Element).addEventListener("click", () => showCategory('watch', true));
 (btnAir as Element).addEventListener("click", () => showCategory('air', true));
+(btnMac as Element).addEventListener("click", () => showCategory('mac', true));
 (btnAll as Element).addEventListener("click", () => showCategory('', true));
 
 const showCategory = (input: any, action: any) => {
