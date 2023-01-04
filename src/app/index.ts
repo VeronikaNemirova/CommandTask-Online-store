@@ -4,8 +4,9 @@ import Products from './product';
 let products: any = [];
 let loadingQuantity = 4;
 let catalogLength: any = null;
-let filteredProducts = [];
+let filteredProducts: any[] = [];
 const catalogList = document.querySelector(".catalog-list");
+const catalogListPopup = document.querySelector(".catalog-popup");
 const catalogLoadMore = document.querySelector(".catalog__more");
 
 
@@ -223,26 +224,20 @@ function renderCart() {
                 <div class="product__counter counter" style="display: flex" data-id="${currentItem.id
                 }">
                 <button class="btn-reset counter__btn counter__dcr" type="button">
-                  <svg>
-                    <use xlink:href="img/sprite.svg#dcr"></use>
-                  </svg>
+                 
                 </button>
                 <input class="counter__input" type="text" value="${item.quantity
                 }" />
                 <button class="btn-reset counter__btn counter__incr" type="button" ${item.quantity < currentItem.amount || "disabled"
                 }>
-                  <svg>
-                    <use xlink:href="img/sprite.svg#incr"></use>
-                  </svg>
+                 
                 </button>
               </div>
               </td>
               <td>
                 <button class="btn-reset cart-item__delete" data-id="${item.id
                 }" type="button">
-                  <svg>
-                    <use xlink:href="img/sprite.svg#trash"></use>
-                  </svg>
+                  
                 </button>
               </td>
             </tr>
@@ -493,7 +488,8 @@ function renderCatalog(loadingQuantity: any) {
             } = isProductInCart(item.id);
 
             (catalogList as Element).innerHTML += `
-        <li class="catalog-list__item">
+        <li class="catalog-list__item" data-product-id="${item.id
+        }">
           <article
             class="product ${isInCart ? "product--inCart" : ""} ${!isAvailability ? "product--disabled" : ""
                 }">
@@ -510,6 +506,7 @@ function renderCatalog(loadingQuantity: any) {
                 <span class="product__price-value">${item.price}</span>
                 <span class="product__price-currency">BYN</span>
               </div>
+              <div class="product__stock">Stock: ${item.amount}</div>
               <div class="product__availability">
               ${isAvailability ? "Available" : "Not avaliable"}
               </div>
@@ -518,11 +515,8 @@ function renderCatalog(loadingQuantity: any) {
                 <div class="product__counter counter">
                   <button
                     class="btn-reset counter__btn counter__dcr"
-                    type="button"
-                  >
-                    <svg>
-                      <use xlink:href="img/sprite.svg#dcr"></use>
-                    </svg>
+                    type="button">
+                    
                   </button>
                   <input class="counter__input" type="text" value="${inCartValue || 1
                 }" />
@@ -530,20 +524,92 @@ function renderCatalog(loadingQuantity: any) {
                     class="btn-reset counter__btn counter__incr"
                     type="button" ${inCartValue < item.amount || "disabled"}
                   >
-                    <svg>
-                      <use xlink:href="img/sprite.svg#incr"></use>
-                    </svg>
+                 
                   </button>
                 </div>
+                <button class="details__btn" type="button">Details</button>
                 <button class="btn-reset product__btn" type="button">Add to cart</button>
               </div>
             </div>
           </article>
         </li>
         `;
+     
+
         }
+
+        
     }
+
 }
+
+let popupItem = document.querySelectorAll(".catalog-list")[0];
+popupItem.addEventListener('click', (e: any) => {
+    let target = e.target as HTMLElement;
+    if (target.classList.contains("details__btn")) {
+        console.log(e);
+        let popup = document.querySelectorAll(".popup")[0];
+        let listItem = e.path.find((i: any) => i.classList == 'catalog-list__item');
+        const index: number = (filteredProducts as any[]).findIndex(element => element.id === listItem.dataset.productId);
+        const item = filteredProducts[index];
+        popup.innerHTML = '';
+        popup.innerHTML = `
+        <li class="catalog-list__item">
+            <div class="product__img">
+              <img src="${item.mainImg}" alt="${item.name}" />
+            </div>
+            <div class="product__img">
+            <img src="${item.imgOne}" alt="${item.name}" />
+          </div>
+          <div class="product__img">
+          <img src="${item.imgTwo}" alt="${item.name}" />
+        </div>
+            <div class="product__content">
+              <h3 class="product__title">${item.name}</h3>
+              <p class="product__description">${item.description}</p>
+              <div class="product__discount">Discount Pecentage: ${item.discount} %</div>
+              <div class="product__category">Category: ${item.category}</div>
+              <div class="product__price">
+                <span class="product__price-value">${item.price}</span>
+                <span class="product__price-currency">BYN</span>
+              </div>
+              <div class="product__control" data-product-id="${item.id
+                }" data-product-name="${item.name}">
+                <div class="product__counter counter">
+                  <button
+                    class="btn-reset counter__btn counter__dcr"
+                    type="button">
+                    
+                  </button>
+                </div>
+                <button class="buy__btn" type="button">
+                Buy Now
+              </button>
+                <button class="btn-reset product__btn" type="button">Add to cart</button>
+              </div>
+            </div>
+          </article>
+        </li>
+        `;
+    
+        document.querySelectorAll('.container-popup')[0].classList.toggle('popup-active');
+        document.querySelectorAll('.background-popup')[0].classList.toggle('background-popup-active');
+        document.querySelectorAll('body')[0].classList.toggle('body-active');
+    }
+
+});
+
+
+document.querySelectorAll(".btn-popup")[0].addEventListener('click', () => {
+    document.querySelectorAll(".container-popup")[0].classList.toggle('popup-active');
+    document.querySelectorAll('.background-popup')[0].classList.toggle('background-popup-active');
+    document.querySelectorAll('body')[0].classList.toggle('body-active');
+});
+document.querySelectorAll(".background-popup")[0].addEventListener('click', () => {
+    document.querySelectorAll(".container-popup")[0].classList.toggle('popup-active');
+    document.querySelectorAll('.background-popup')[0].classList.toggle('background-popup-active');
+    document.querySelectorAll('body')[0].classList.toggle('body-active');
+});
 
 
 const modalLink = document.querySelectorAll(".modal-link"),
@@ -800,3 +866,94 @@ clearButton?.addEventListener('click', () => {
     products = response.map((e) => Object.assign(new Product(null, null, null, null), e));
     renderCatalog(loadingQuantity);
 })
+
+
+
+
+function controlFromInput(fromSlider: any, fromInput: any, toInput: any, controlSlider: any) {
+    const [from, to] = getParsed(fromInput, toInput);
+    fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
+    if (from > to) {
+        fromSlider.value = to;
+        fromInput.value = to;
+    } else {
+        fromSlider.value = from;
+    }
+}
+    
+function controlToInput(toSlider: any, fromInput: any, toInput: any, controlSlider: any) {
+    const [from, to] = getParsed(fromInput, toInput);
+    fillSlider(fromInput, toInput, '#C6C6C6', '#25daa5', controlSlider);
+    setToggleAccessible(toInput);
+    if (from <= to) {
+        toSlider.value = to;
+        toInput.value = to;
+    } else {
+        toInput.value = from;
+    }
+}
+
+function controlFromSlider(fromSlider: any, toSlider: any, fromInput: any) {
+  const [from, to] = getParsed(fromSlider, toSlider);
+  fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+  if (from > to) {
+    fromSlider.value = to;
+    fromInput.value = to;
+  } else {
+    fromInput.value = from;
+  }
+}
+
+function controlToSlider(fromSlider: any, toSlider: any, toInput: any) {
+  const [from, to] = getParsed(fromSlider, toSlider);
+  fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+  setToggleAccessible(toSlider);
+  if (from <= to) {
+    toSlider.value = to;
+    toInput.value = to;
+  } else {
+    toInput.value = from;
+    toSlider.value = from;
+  }
+}
+
+function getParsed(currentFrom: any, currentTo: any) {
+  const from = parseInt(currentFrom.value, 10);
+  const to = parseInt(currentTo.value, 10);
+  return [from, to];
+}
+
+function fillSlider(from: any, to: any, sliderColor: any, rangeColor: any, controlSlider: any) {
+    const rangeDistance = to.max-to.min;
+    const fromPosition = from.value - to.min;
+    const toPosition = to.value - to.min;
+    controlSlider.style.background = `linear-gradient(
+      to right,
+      ${sliderColor} 0%,
+      ${sliderColor} ${(fromPosition)/(rangeDistance)*100}%,
+      ${rangeColor} ${((fromPosition)/(rangeDistance))*100}%,
+      ${rangeColor} ${(toPosition)/(rangeDistance)*100}%, 
+      ${sliderColor} ${(toPosition)/(rangeDistance)*100}%, 
+      ${sliderColor} 100%)`;
+}
+
+function setToggleAccessible(currentTarget: any) {
+  const toSlider = document.querySelector('#toSlider');
+  if (Number(currentTarget.value) <= 0 ) {
+    (toSlider as any).style.zIndex = 2;
+  } else {
+    (toSlider as any).style.zIndex = 0;
+  }
+}
+
+const fromSlider = document.querySelector('#fromSlider');
+const toSlider = document.querySelector('#toSlider');
+const fromInput = document.querySelector('#fromInput');
+const toInput = document.querySelector('#toInput');
+fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
+setToggleAccessible(toSlider);
+
+(fromSlider as HTMLElement).oninput = () => controlFromSlider(fromSlider, toSlider, fromInput);
+(toSlider as HTMLElement).oninput = () => controlToSlider(fromSlider, toSlider, toInput);
+(fromInput as HTMLElement).oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
+(toInput as HTMLElement).oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);

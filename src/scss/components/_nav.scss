@@ -11,9 +11,9 @@
   }
 
   &__link {
+    padding-right: 10px;
     position: relative;
     color: $color-rangoongreen;
-    font: var(--small-font);
     transition: 0.3s ease;
 
     &::after,
