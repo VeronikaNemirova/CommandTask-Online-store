@@ -105,7 +105,6 @@ class User {
     public money: number;
     public orders: any;
     public cart: any;
-    public filters: any;
     constructor(name?: string, money?: number) {
         this.id = `u${Date.now()}`;
 
@@ -116,7 +115,6 @@ class User {
 
         this.orders = [];
         this.cart = this.getCart();
-        this.filters = getFilters();
     }
 
     showOrderHistory(direction = 1, field = 'date') {
@@ -286,7 +284,7 @@ function renderCart() {
             renderCart();
         });
     });
-    currentUser.filters = getFilters();
+    updateSearchPatams();
     saveToLS(currentUser);
 }
 
@@ -405,19 +403,21 @@ function getFilters() {
     };
 }
 
-function setFilters(filters: any): void {
-    if (filters) {
+function setFilters(): void {
+    var searchParams = new URLSearchParams(window.location.search);
+    console.log(searchParams, window.location, searchParams.get('priceMin'));
+    if (searchParams) {
         const fields = (document.forms as any).filters.elements;
-        fields.fromSlider.value = filters.price.min;
-        fields.toSlider.value = filters.price.max;
-        fields.price__min.value = filters.price.min;
-        fields.price__max.value = filters.price.max;
-        fields.fromYearSlider.value = filters.year.min;
-        fields.toYearSlider.value= filters.year.max;
-        fields.year__min.value = filters.year.min;
-        fields.year__max.value= filters.year.max;
-        fields.instock.checked = !!filters.instock;
-        fields.sort.value = filters.sort;
+        fields.fromSlider.value = searchParams.get('priceMin') || 0;
+        fields.toSlider.value = searchParams.get('priceMax') || 8000;
+        fields.price__min.value = searchParams.get('priceMin') || 0;
+        fields.price__max.value = searchParams.get('priceMax') || 8000;
+        fields.fromYearSlider.value = searchParams.get('yearMin') || 2010;
+        fields.toYearSlider.value= searchParams.get('yearMax') || 2023;
+        fields.year__min.value = searchParams.get('yearMin') || 2010;
+        fields.year__max.value= searchParams.get('yearMax')  || 2023;
+        fields.instock.checked = !!searchParams.get('instock') || 0;
+        fields.sort.value = searchParams.get('sort') || 1;
     }
 }
 
@@ -443,7 +443,7 @@ filters.addEventListener("change", () => {
 
     renderCatalog(loadingQuantity);
     visibilityLoadMore();
-    currentUser.filters = getFilters();
+    updateSearchPatams();
     saveToLS(currentUser);
     console.log(getFilters());
 });
@@ -604,20 +604,6 @@ popupItem.addEventListener('click', (e: any) => {
                 <span class="product__price-value">${item.price}</span>
                 <span class="product__price-currency">BYN</span>
               </div>
-              <div class="product__control" data-product-id="${item.id
-                }" data-product-name="${item.name}">
-                <div class="product__counter counter">
-                  <button
-                    class="btn-reset counter__btn counter__dcr"
-                    type="button">
-                    -
-                  </button>
-                </div>
-                <button class="buy__btn" type="button">
-                Buy Now
-              </button>
-                <button class="btn-reset product__btn" type="button">Add to cart</button>
-              </div>
             </div>
           </article>
         </li>
@@ -774,7 +760,7 @@ function renderOrders() {
             }
         }
         setCardCount();
-        currentUser.filters = getFilters();
+        updateSearchPatams();
         saveToLS(currentUser);
     }
 });
@@ -803,7 +789,7 @@ function renderOrders() {
         }
 
         setCardCount();
-        currentUser.filters = getFilters();
+        updateSearchPatams();
         saveToLS(currentUser);
     }
 });
@@ -818,8 +804,25 @@ function renderOrders() {
 const lastSession = JSON.parse(window.localStorage.getItem("last session") as string);
 
 let currentUser = serializingUser(lastSession) || new User();
-setFilters(lastSession?.filters);
+setFilters();
 setCardCount();
+
+function updateSearchPatams() {
+    if ('URLSearchParams' in window) {
+        const filters = getFilters();
+        const url = new URL(window.location as any);
+        url.searchParams.set('foo', 'bar');
+        url.searchParams.set("priceMin", filters.price.min);
+        url.searchParams.set("priceMax", filters.price.max);
+        url.searchParams.set("yearMin", filters.year.min);
+        url.searchParams.set("yearMax", filters.year.max);
+        url.searchParams.set("instock", filters.instock.toString());
+        url.searchParams.set("sort", filters.sort);
+        window.history.pushState({}, '', url);
+        // window.stop();
+    }
+}
+
 
 
 function isEmptyObject(obj: any) {
