@@ -137,38 +137,53 @@ c-122 10 -155 36 -146 111 4 37 36 59 133 94 61 22 99 29 158 30 73 1 77 0 77
     </div>
     <div class="catalog" id="catalog">
       <div class="container catalog__container">
-        <div class="range_container">
-          <div class="sliders_control">
-            <input id="fromSlider" type="range" value="0" min="0" max="8000" />
-            <input id="toSlider" type="range" value="8000" min="0" max="8000" />
-          </div>
-          <div class="form_control">
-            <div class="form_control_container">
-              <div class="form_control_container__time">Min</div>
-              <input class="form_control_container__time__input" type="number" id="fromInput" value="0" min="0"
-                max="8000" />
-            </div>
-            <div class="form_control_container">
-              <div class="form_control_container__time">Max</div>
-              <input class="form_control_container__time__input" type="number" id="toInput" value="8000" min="0"
-                max="8000" />
-            </div>
-          </div>
-        </div>
         <h2 class="catalog__title title">Catalog</h2>
         <form class="catalog-filters" name="filters">
           <div class="catalog__filter catalog-price">
             <p class="catalog-price__label">Price</p>
             <div class="catalog-price__wrap">
-              <input class="catalog-price__input" type="number" name="price-min" id="price__min" value="300" />
-              <span class="seprator"></span>
-              <input class="catalog-price__input" type="number" name="price-max" id="price__max" value="8000" />
+              <div class="range_container">
+                <div class="sliders_control">
+                  <input id="fromSlider" type="range" value="0" min="0" max="8000" />
+                  <input id="toSlider" type="range" value="8000" min="0" max="8000" />
+                </div>
+                <div class="form_control">
+                  <div class="form_control_container">
+                    <div class="form_control_container__time">Min</div>
+                    <input class="form_control_container__time__input" type="number"  name="price-min" id="price__min" value="300" min="0"
+                      max="8000" />
+                  </div>
+                  <div class="form_control_container">
+                    <div class="form_control_container__time">Max</div>
+                    <input class="form_control_container__time__input" type="number" name="price-max" id="price__max" value="8000" min="0"
+                      max="8000" />
+                  </div>
+                </div>
+              </div>
             </div>
             <p class="catalog-year__label">Year</p>
             <div class="catalog-year__wrap">
-              <input class="catalog-year__input" type="number" name="year-min" id="year__min" value="2019" />
+              <div class="range_container">
+                <div class="sliders_control">
+                  <input id="fromYearSlider" type="range" value="2019" min="2010" max="2023" />
+                  <input id="toYearSlider" type="range" value="2022" min="2010" max="2023" />
+                </div>
+                <div class="form_control">
+                  <div class="form_control_container">
+                    <div class="form_control_container__time">Min</div>
+                    <input class="form_control_container__time__input" type="number"  name="year-min" id="year__min" value="2019" min="2010"
+                      max="8000" />
+                  </div>
+                  <div class="form_control_container">
+                    <div class="form_control_container__time">Max</div>
+                    <input class="form_control_container__time__input" type="number" name="year-max" id="year__max" value="2022" min="2010"
+                      max="2023" />
+                  </div>
+                </div>
+              </div>
+              <!-- <input class="catalog-year__input" type="number" name="year-min" id="year__min" value="2019" />
               <span class="seprator"></span>
-              <input class="catalog-year__input" type="number" name="year-max" id="year__max" value="2022" />
+              <input class="catalog-year__input" type="number" name="year-max" id="year__max" value="2022" /> -->
             </div>
           </div>
           <div class="catalog__filter catalog-instock">

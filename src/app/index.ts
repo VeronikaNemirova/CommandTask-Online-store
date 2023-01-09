@@ -1,4 +1,5 @@
 
+import { get } from 'https';
 import Products from './product';
 
 let products: any = [];
@@ -104,6 +105,7 @@ class User {
     public money: number;
     public orders: any;
     public cart: any;
+    public filters: any;
     constructor(name?: string, money?: number) {
         this.id = `u${Date.now()}`;
 
@@ -114,6 +116,7 @@ class User {
 
         this.orders = [];
         this.cart = this.getCart();
+        this.filters = getFilters();
     }
 
     showOrderHistory(direction = 1, field = 'date') {
@@ -174,7 +177,13 @@ function setCardCount() {
         } else {
             (cartCount as HTMLElement).style.display = "none";
         }
+        checkCartSum();
     }
+}
+
+function checkCartSum() {
+    (document.querySelector(".header-price .price") as Element).innerHTML =
+        currentUser.cart.totalSum;
 }
 
 function clearCart() {
@@ -224,13 +233,13 @@ function renderCart() {
                 <div class="product__counter counter" style="display: flex" data-id="${currentItem.id
                 }">
                 <button class="btn-reset counter__btn counter__dcr" type="button">
-                 
+                 -
                 </button>
                 <input class="counter__input" type="text" value="${item.quantity
                 }" />
                 <button class="btn-reset counter__btn counter__incr" type="button" ${item.quantity < currentItem.amount || "disabled"
                 }>
-                 
+                 +
                 </button>
               </div>
               </td>
@@ -246,8 +255,6 @@ function renderCart() {
 
         (document.querySelector(".make-order .price") as Element).innerHTML =
             currentUser.cart.totalSum;
-        (document.querySelector(".header-price .price") as Element).innerHTML =
-        currentUser.cart.totalSum;
     } else {
         (cartBody as Element).innerHTML = afterOrder ?
             `
@@ -279,6 +286,7 @@ function renderCart() {
             renderCart();
         });
     });
+    currentUser.filters = getFilters();
     saveToLS(currentUser);
 }
 
@@ -397,6 +405,22 @@ function getFilters() {
     };
 }
 
+function setFilters(filters: any): void {
+    if (filters) {
+        const fields = (document.forms as any).filters.elements;
+        fields.fromSlider.value = filters.price.min;
+        fields.toSlider.value = filters.price.max;
+        fields.price__min.value = filters.price.min;
+        fields.price__max.value = filters.price.max;
+        fields.fromYearSlider.value = filters.year.min;
+        fields.toYearSlider.value= filters.year.max;
+        fields.year__min.value = filters.year.min;
+        fields.year__max.value= filters.year.max;
+        fields.instock.checked = !!filters.instock;
+        fields.sort.value = filters.sort;
+    }
+}
+
 const priceInput = document.querySelectorAll(".catalog-price__input");
 const yearInput = document.querySelectorAll(".catalog-year__input");
 
@@ -419,6 +443,8 @@ filters.addEventListener("change", () => {
 
     renderCatalog(loadingQuantity);
     visibilityLoadMore();
+    currentUser.filters = getFilters();
+    saveToLS(currentUser);
     console.log(getFilters());
 });
 
@@ -519,7 +545,7 @@ function renderCatalog(loadingQuantity: any) {
                   <button
                     class="btn-reset counter__btn counter__dcr"
                     type="button">
-                    
+                    -
                   </button>
                   <input class="counter__input" type="text" value="${inCartValue || 1
                 }" />
@@ -527,7 +553,7 @@ function renderCatalog(loadingQuantity: any) {
                     class="btn-reset counter__btn counter__incr"
                     type="button" ${inCartValue < item.amount || "disabled"}
                   >
-                 
+                 +
                   </button>
                 </div>
                 <button class="details__btn" type="button">Details</button>
@@ -557,16 +583,18 @@ popupItem.addEventListener('click', (e: any) => {
         const item = filteredProducts[index];
         popup.innerHTML = '';
         popup.innerHTML = `
-        <li class="catalog-list__item">
-            <div class="product__img">
-              <img src="${item.mainImg}" alt="${item.name}" />
+        <li class="catalog-list__item popup">
+            <div class="product-popup-wrapper">
+                <div class="product-popup__img">
+                <img src="${item.mainImg}" alt="${item.name}" />
+                </div>
+                <div class="product-popup__img">
+                    <img src="${item.imgOne}" alt="${item.name}" />
+                </div>
+                <div class="product-popup__img">
+                    <img src="${item.imgTwo}" alt="${item.name}" />
+                </div>
             </div>
-            <div class="product__img">
-            <img src="${item.imgOne}" alt="${item.name}" />
-          </div>
-          <div class="product__img">
-          <img src="${item.imgTwo}" alt="${item.name}" />
-        </div>
             <div class="product__content">
               <h3 class="product__title">${item.name}</h3>
               <p class="product__description">${item.description}</p>
@@ -582,7 +610,7 @@ popupItem.addEventListener('click', (e: any) => {
                   <button
                     class="btn-reset counter__btn counter__dcr"
                     type="button">
-                    
+                    -
                   </button>
                 </div>
                 <button class="buy__btn" type="button">
@@ -746,6 +774,7 @@ function renderOrders() {
             }
         }
         setCardCount();
+        currentUser.filters = getFilters();
         saveToLS(currentUser);
     }
 });
@@ -774,6 +803,7 @@ function renderOrders() {
         }
 
         setCardCount();
+        currentUser.filters = getFilters();
         saveToLS(currentUser);
     }
 });
@@ -788,8 +818,7 @@ function renderOrders() {
 const lastSession = JSON.parse(window.localStorage.getItem("last session") as string);
 
 let currentUser = serializingUser(lastSession) || new User();
-
-
+setFilters(lastSession?.filters);
 setCardCount();
 
 
@@ -826,12 +855,8 @@ function changeStatusName() {
     }
 }
 
-var search, pr, result, result_arr, locale_HTML, result_store;
 
-function func() {
-    locale_HTML = document.body.innerHTML;
-}
-setTimeout(func, 1000);
+
 (btnPhone as Element).addEventListener("click", () => showCategory('phone', true));
 (btnWatch as Element).addEventListener("click", () => showCategory('watch', true));
 (btnAir as Element).addEventListener("click", () => showCategory('air', true));
@@ -952,8 +977,8 @@ function setToggleAccessible(currentTarget: any) {
 
 const fromSlider = document.querySelector('#fromSlider');
 const toSlider = document.querySelector('#toSlider');
-const fromInput = document.querySelector('#fromInput');
-const toInput = document.querySelector('#toInput');
+const fromInput = document.querySelector('#price__min');
+const toInput = document.querySelector('#price__max');
 fillSlider(fromSlider, toSlider, '#C6C6C6', '#25daa5', toSlider);
 setToggleAccessible(toSlider);
 
@@ -961,3 +986,15 @@ setToggleAccessible(toSlider);
 (toSlider as HTMLElement).oninput = () => controlToSlider(fromSlider, toSlider, toInput);
 (fromInput as HTMLElement).oninput = () => controlFromInput(fromSlider, fromInput, toInput, toSlider);
 (toInput as HTMLElement).oninput = () => controlToInput(toSlider, fromInput, toInput, toSlider);
+
+const fromYearSlider = document.querySelector('#fromYearSlider');
+const toYearSlider = document.querySelector('#toYearSlider');
+const fromYearInput = document.querySelector('#year__min');
+const toYearInput = document.querySelector('#year__max');
+fillSlider(fromYearSlider, toYearSlider, '#C6C6C6', '#25daa5', toYearSlider);
+setToggleAccessible(toYearSlider);
+
+(fromYearSlider as HTMLElement).oninput = () => controlFromSlider(fromYearSlider, toYearSlider, fromYearInput);
+(toYearSlider as HTMLElement).oninput = () => controlToSlider(fromYearSlider, toYearSlider, toYearInput);
+(fromYearInput as HTMLElement).oninput = () => controlFromInput(fromYearSlider, fromYearInput, toYearInput, toYearSlider);
+(toYearInput as HTMLElement).oninput = () => controlToInput(toYearSlider, fromYearInput, toYearInput, toYearSlider);
