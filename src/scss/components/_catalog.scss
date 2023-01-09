@@ -1,3 +1,18 @@
+.catalog-popup {
+  display: flex;
+  flex-direction: column;
+}
+
+.img-popup {
+  width: 300px;
+  height: 300px;
+}
+
+.product__description {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
 .range_container {
   display: flex;
   flex-direction: column;
@@ -132,6 +147,11 @@ input[type="range"] {
 .button_for_search:hover {
   background-color: #89a86e;
 }
+
+.catalog-list__item {
+  display: flex;
+}
+
 .catalog {
   &__container {
     padding-top: 50px;
@@ -329,7 +349,7 @@ input[type="range"] {
   overflow: hidden;
 }
 .popup {
-  width: 600px;
+  width: 80%;
   height: 600px;
   display: flex;
   justify-content: center;
@@ -359,6 +379,7 @@ input[type="range"] {
 }
 .popup-active {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 }
@@ -509,7 +530,29 @@ input[type="range"] {
     }
   }
 }
+.buy__btn {
+  display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 42px;
+    padding: 5px;
+    border: 1px solid $color-schist;
+    border-radius: 4px;
+    background: linear-gradient(90deg, $color-schist 50%, rgb(255, 255, 255) 50%);
+    background-position: 100% 100%;
+    background-size: 200% 100%;
+    color: $color-woodsmoke;
+    font-size: 24px;
+    transition: all 0.5s ease-in-out;
+    cursor: pointer;
+}
 
+.buy__btn:hover {
+  background-color: $color-schist;
+  background-position: 0 100%;
+  color: $color-white;
+}
 .counter {
   display: flex;
   display: none;

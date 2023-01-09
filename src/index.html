@@ -34,6 +34,7 @@
             </ul>
           </nav>
         </div>
+        <div class="header-price">Total:<span class="price"></span> BYN</div>
         <div class="cart header__cart link__item">
           <a href="#modal-cart" data-modal="#cart" class="cart__btn link__btn modal-link">
             <?xml version="1.0" standalone="no"?>
@@ -110,6 +111,7 @@ c-122 10 -155 36 -146 111 4 37 36 59 133 94 61 22 99 29 158 30 73 1 77 0 77
             <div class="cart__count"></div>
           </a>
         </div>
+        
       </div>
   </div>
   </header>
@@ -137,20 +139,22 @@ c-122 10 -155 36 -146 111 4 37 36 59 133 94 61 22 99 29 158 30 73 1 77 0 77
       <div class="container catalog__container">
         <div class="range_container">
           <div class="sliders_control">
-             <input id="fromSlider" type="range" value="0" min="0" max="8000"/>
-             <input id="toSlider" type="range" value="8000" min="0" max="8000"/>
+            <input id="fromSlider" type="range" value="0" min="0" max="8000" />
+            <input id="toSlider" type="range" value="8000" min="0" max="8000" />
           </div>
           <div class="form_control">
             <div class="form_control_container">
-                <div class="form_control_container__time">Min</div>
-                <input class="form_control_container__time__input" type="number" id="fromInput" value="0" min="0" max="8000"/>
-              </div>
-              <div class="form_control_container">
-                <div class="form_control_container__time">Max</div>
-                <input class="form_control_container__time__input" type="number" id="toInput" value="8000" min="0" max="8000"/>
-              </div>
+              <div class="form_control_container__time">Min</div>
+              <input class="form_control_container__time__input" type="number" id="fromInput" value="0" min="0"
+                max="8000" />
+            </div>
+            <div class="form_control_container">
+              <div class="form_control_container__time">Max</div>
+              <input class="form_control_container__time__input" type="number" id="toInput" value="8000" min="0"
+                max="8000" />
+            </div>
           </div>
-      </div>
+        </div>
         <h2 class="catalog__title title">Catalog</h2>
         <form class="catalog-filters" name="filters">
           <div class="catalog__filter catalog-price">
@@ -185,9 +189,9 @@ c-122 10 -155 36 -146 111 4 37 36 59 133 94 61 22 99 29 158 30 73 1 77 0 77
         </form>
         <div class="catalog__grid">
           <ul class="catalog-list grid">
-            <li class="catalog-list__item">
+            <li class="catalog-list__item catalog-popup">
               <article data-id="10533" class="product">
-                <div class="product__img">
+                <div class="product__img img-popup">
                   <img src="./assets/images/hero-slide2.jpg" alt="" />
                 </div>
                 <div class="product__content">
@@ -217,17 +221,16 @@ c-122 10 -155 36 -146 111 4 37 36 59 133 94 61 22 99 29 158 30 73 1 77 0 77
               <div class="popup">
                 <div class="catalog-list__item catalog-popup">
                   <article data-id="10533" class="product">
-                    <div class="product__img">
-                      <img src="./assets/images/hero-slide2.jpg" alt="" />
-                    </div>
-                    <div class="product__img">
-                      <img src="./assets/images/hero-slide2.jpg" alt="" />
-                    </div>
-                    <div class="product__img">
-                      <img src="./assets/images/hero-slide2.jpg" alt="" />
-                    </div>
-                    <div class="product__img main">
-                      <img src="./assets/images/hero-slide2.jpg" alt="" />
+                    <div class="product-img-all">
+                      <div class="product__img img_popup">
+                        <img src="./assets/images/hero-slide2.jpg" alt="" />
+                      </div>
+                      <div class="product__img img_popup">
+                        <img src="./assets/images/hero-slide2.jpg" alt="" />
+                      </div>
+                      <div class="product__img img_popup">
+                        <img src="./assets/images/hero-slide2.jpg" alt="" />
+                      </div>
                     </div>
                     <div class="product__content">
                       <div class="product__description">Description:</div>

@@ -246,6 +246,8 @@ function renderCart() {
 
         (document.querySelector(".make-order .price") as Element).innerHTML =
             currentUser.cart.totalSum;
+        (document.querySelector(".header-price .price") as Element).innerHTML =
+        currentUser.cart.totalSum;
     } else {
         (cartBody as Element).innerHTML = afterOrder ?
             `
@@ -262,6 +264,7 @@ function renderCart() {
         `;
         afterOrder = false;
         const price = document.querySelector(".make-order .price");
+        const priceHeader = document.querySelector(".header-order .price");
         (price as Element).innerHTML = "";
         (document.querySelector(".make-order") as HTMLElement).style.display = "none";
     }
@@ -716,6 +719,7 @@ function renderOrders() {
         const productStock = findProduct(productId).amount;
 
         if (target.classList.contains("product__btn")) {
+            console.log(currentUser);
             if (currentUser.cart.size === 10) {
                 alert("Sorry, too much products!")
             } else {
